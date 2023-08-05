@@ -11,7 +11,7 @@ var (
 
 // New creates a new rotary encoder.
 func New(pinA, pinB machine.Pin) *Device {
-	return &Device{pinA: pinA, pinB: pinB, oldAB: 0b00000011, value: 0, ch: make(chan int, 8)}
+	return &Device{pinA: pinA, pinB: pinB, oldAB: 0b00000011, value: 0, Dir: make(chan int, 8), Switch: make(chan bool)}
 }
 
 // Device represents a rotary encoder.
@@ -19,9 +19,10 @@ type Device struct {
 	pinA machine.Pin
 	pinB machine.Pin
 
-	oldAB int
-	value int
-	ch    chan int
+	oldAB  int
+	value  int
+	Dir    chan int
+	Switch chan bool
 }
 
 // Configure configures the rotary encoder.
@@ -51,8 +52,8 @@ func (enc *Device) interrupt(pin machine.Pin) {
 	if enc.value%4 == 0 {
 		direction := enc.value / 4
 		if direction != 0 {
-			select {
-			case enc.ch <- direction:
+			select { // non-blocking way of sending to channel
+			case enc.Dir <- direction:
 			default:
 			}
 		}
