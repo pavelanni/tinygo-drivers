@@ -1,0 +1,7 @@
+= Seven-segment indicator driver for TinyGo
+
+This driver is slightly modified to increase the delay.
+The issue is described here: https://github.com/tinygo-org/drivers/issues/554
+
+Thanks to @bxparks this version of the driver now works with "black" TM1637s.
+
