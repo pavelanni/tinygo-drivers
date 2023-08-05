@@ -1,0 +1,14 @@
+= TinyGo driver for a rotary encoder
+
+This driver uses a slightly modified code from https://github.com/bgould/tinygo-rotary-encoder
+
+I added the encoder channel to read the movement from and the switch channel.
+
+The code that reads the encoder's state uses Gray code (https://en.wikipedia.org/wiki/Gray_code).
+That makes readings very reliable and eliminates the need for debouncing.
+
+The original C/Arduino code was written by Oleg Mazurov (@felis) and explained here:
+
+* https://chome.nerpa.tech/mcu/reading-rotary-encoder-on-arduino/
+* https://chome.nerpa.tech/mcu/rotary-encoder-interrupt-service-routine-for-avr-micros/
+
