@@ -10,8 +10,8 @@ var (
 )
 
 // New creates a new rotary encoder.
-func New(pinA, pinB, pinS machine.Pin) *Device {
-	return &Device{pinA: pinA, pinB: pinB, pinS: pinS, oldAB: 0b00000011, value: 0, swValue: false, Dir: make(chan int, 8), Switch: make(chan bool)}
+func New(pinA, pinB, pinS machine.Pin) Device {
+	return Device{pinA: pinA, pinB: pinB, pinS: pinS, oldAB: 0b00000011, value: 0, swValue: false, Dir: make(chan int, 8), Switch: make(chan bool)}
 }
 
 // Device represents a rotary encoder.
