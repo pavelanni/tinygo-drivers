@@ -10,19 +10,21 @@ var (
 )
 
 // New creates a new rotary encoder.
-func New(pinA, pinB machine.Pin) *Device {
-	return &Device{pinA: pinA, pinB: pinB, oldAB: 0b00000011, value: 0, Dir: make(chan int, 8), Switch: make(chan bool)}
+func New(pinA, pinB, pinS machine.Pin) *Device {
+	return &Device{pinA: pinA, pinB: pinB, pinS: pinS, oldAB: 0b00000011, value: 0, swValue: false, Dir: make(chan int, 8), Switch: make(chan bool)}
 }
 
 // Device represents a rotary encoder.
 type Device struct {
-	pinA machine.Pin
-	pinB machine.Pin
+	pinA machine.Pin // DT pin
+	pinB machine.Pin // CLK pin
+	pinS machine.Pin // SW pin
 
-	oldAB  int
-	value  int
-	Dir    chan int
-	Switch chan bool
+	oldAB   int
+	value   int
+	swValue bool
+	Dir     chan int
+	Switch  chan bool
 }
 
 // Configure configures the rotary encoder.
@@ -32,6 +34,18 @@ func (enc *Device) Configure() {
 
 	enc.pinB.Configure(machine.PinConfig{Mode: machine.PinInputPullup})
 	enc.pinB.SetInterrupt(machine.PinRising|machine.PinFalling, enc.interrupt)
+
+	enc.pinS.Configure(machine.PinConfig{Mode: machine.PinInputPullup})
+	enc.pinS.SetInterrupt(machine.PinRising|machine.PinFalling, enc.swInterrupt)
+}
+
+func (enc *Device) swInterrupt(pin machine.Pin) {
+	if enc.pinS.Get() {
+		enc.swValue = false
+	} else {
+		enc.swValue = true
+		enc.Switch <- enc.swValue
+	}
 }
 
 func (enc *Device) interrupt(pin machine.Pin) {
@@ -69,4 +83,9 @@ func (enc *Device) Value() int {
 // SetValue sets the value of the rotary encoder.
 func (enc *Device) SetValue(v int) {
 	enc.value = v * 4
+}
+
+// SwitchValue returns the value of the switch.
+func (enc *Device) SwitchValue() bool {
+	return enc.swValue
 }
