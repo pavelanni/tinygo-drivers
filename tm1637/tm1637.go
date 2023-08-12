@@ -75,6 +75,7 @@ func (d *Device) DisplayChr(chr byte, pos uint8) {
 func (d *Device) DisplayNumber(num int16) {
 	var sequences []byte
 	var start int16
+	println("num: ", num)
 	if num < 0 {
 		sequences = append(sequences, segments[37])
 		num *= -1
@@ -96,6 +97,7 @@ func (d *Device) DisplayNumber(num int16) {
 			}
 		}
 	}
+	println("sequences: ", sequences)
 	d.writeData(sequences, 0)
 }
 
@@ -211,6 +213,7 @@ func (d *Device) writeData(segments []byte, position uint8) {
 	d.writeByte(TM1637_CMD2 | position)
 	for _, seg := range segments {
 		d.writeByte(seg)
+		println("seg: ", seg)
 	}
 	d.stop()
 	d.writeDsp()

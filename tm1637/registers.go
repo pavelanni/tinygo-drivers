@@ -17,7 +17,7 @@ const (
 	// microseconds.
 	//
 	// TODO: This should be an adjustable parameter.
-	TM1637_DELAY  = uint8(100)
+	TM1637_DELAY = uint8(200)
 )
 
 // 7-segment characters encoding for 0-9, A-Z, a-z, blank, dash, star

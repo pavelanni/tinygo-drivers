@@ -44,7 +44,10 @@ func (enc *Device) swInterrupt(pin machine.Pin) {
 		enc.swValue = false
 	} else {
 		enc.swValue = true
-		enc.Switch <- enc.swValue
+		select {
+		case enc.Switch <- enc.swValue:
+		default:
+		}
 	}
 }
 
