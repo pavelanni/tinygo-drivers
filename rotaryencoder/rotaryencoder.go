@@ -47,10 +47,15 @@ func (enc *Device) Configure() {
 
 func (enc *Device) swInterrupt(pin machine.Pin) {
 	if enc.pinS.Get() { // the switch is released -- because of pullup
+		println("released")
 		enc.swValue = false
 		enc.wasClicked = true
 	} else { //the switch is pressed
+		println("pressed")
 		enc.swValue = true
+	}
+	if enc.wasClicked {
+		println("clicked")
 	}
 }
 
@@ -98,6 +103,7 @@ func (enc *Device) SwitchWasClicked() bool {
 		enc.wasClicked = false
 		return true
 	} else {
+		println("not clicked")
 		return false
 	}
 }
