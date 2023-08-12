@@ -11,7 +11,11 @@ var (
 
 // New creates a new rotary encoder.
 func New(pinA, pinB, pinS machine.Pin) Device {
-	return Device{pinA: pinA, pinB: pinB, pinS: pinS, oldAB: 0b00000011, value: 0, swValue: false, Dir: make(chan int, 8), Switch: make(chan bool)}
+	return Device{pinA: pinA, pinB: pinB, pinS: pinS,
+		oldAB: 0b00000011, value: 0,
+		swValue: false, oldSwValue: false, wasClicked: false,
+		Dir:    make(chan int, 8),
+		Switch: make(chan bool)}
 }
 
 // Device represents a rotary encoder.
@@ -20,11 +24,13 @@ type Device struct {
 	pinB machine.Pin // CLK pin
 	pinS machine.Pin // SW pin
 
-	oldAB   int
-	value   int
-	swValue bool
-	Dir     chan int
-	Switch  chan bool
+	oldAB      int
+	value      int
+	swValue    bool
+	oldSwValue bool
+	wasClicked bool
+	Dir        chan int
+	Switch     chan bool
 }
 
 // Configure configures the rotary encoder.
@@ -40,14 +46,11 @@ func (enc *Device) Configure() {
 }
 
 func (enc *Device) swInterrupt(pin machine.Pin) {
-	if enc.pinS.Get() {
+	if enc.pinS.Get() { // the switch is released -- because of pullup
 		enc.swValue = false
-	} else {
+		enc.wasClicked = true
+	} else { //the switch is pressed
 		enc.swValue = true
-		select {
-		case enc.Switch <- enc.swValue:
-		default:
-		}
 	}
 }
 
@@ -89,6 +92,12 @@ func (enc *Device) SetValue(v int) {
 }
 
 // SwitchValue returns the value of the switch.
-func (enc *Device) SwitchValue() bool {
-	return enc.swValue
+func (enc *Device) SwitchWasClicked() bool {
+	if enc.wasClicked {
+		println("Switch was clicked")
+		enc.wasClicked = false
+		return true
+	} else {
+		return false
+	}
 }
