@@ -49,6 +49,10 @@ func (enc *Device) swInterrupt(pin machine.Pin) {
 	if enc.pinS.Get() { // the switch is released -- because of pullup
 		enc.swValue = false
 		enc.wasClicked = true
+		select {
+		case enc.Switch <- true:
+		default:
+		}
 	} else { //the switch is pressed
 		enc.swValue = true
 	}
