@@ -20,8 +20,8 @@ func New(pinA, pinB, pinS machine.Pin) Device {
 
 // Device represents a rotary encoder.
 type Device struct {
-	pinA machine.Pin // DT pin
-	pinB machine.Pin // CLK pin
+	pinA machine.Pin // CLK pin
+	pinB machine.Pin // DT pin
 	pinS machine.Pin // SW pin
 
 	oldAB      int
@@ -68,7 +68,7 @@ func (enc *Device) interrupt(pin machine.Pin) {
 		enc.oldAB |= 1
 	}
 
-	enc.value += int(states[enc.oldAB&0x0f])
+	enc.value -= int(states[enc.oldAB&0x0f])
 
 	// Each full click of the encoder generates 4 interupts.
 	// Each interrupt add 1 or -1 to the value.
