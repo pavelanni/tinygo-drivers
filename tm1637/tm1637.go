@@ -38,6 +38,13 @@ func (d *Device) Brightness(brightness uint8) {
 	d.writeDsp()
 }
 
+func (d *Device) FadeIn(duration time.Duration) {
+	for i := 0; i < 8; i++ {
+		d.Brightness(uint8(i))
+		time.Sleep(duration / 8) // because there are 8 steps of brightness
+	}
+}
+
 // ClearDisplay clears the display.
 func (d *Device) ClearDisplay() {
 	d.writeData([]byte{0, 0, 0, 0}, 0)
