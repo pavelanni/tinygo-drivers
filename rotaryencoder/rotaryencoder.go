@@ -71,7 +71,7 @@ func (enc *Device) interrupt(pin machine.Pin) {
 	enc.value += int(states[enc.oldAB&0x0f])
 
 	// Each full click of the encoder generates 4 interupts.
-	// Each interrupt add 1 or -1 to the value.
+	// Each interrupt adds 1 or -1 to the value.
 	// We send the direction to the channel only when we have a full click, i.e. 4 interrupts.
 	if enc.value%4 == 0 {
 		direction := -(enc.value / 4)
