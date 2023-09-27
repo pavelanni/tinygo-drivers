@@ -38,10 +38,10 @@ func (d *Device) Brightness(brightness uint8) {
 	d.writeDsp()
 }
 
-func (d *Device) FadeIn(duration time.Duration) {
-	for i := 0; i < 8; i++ {
+func (d *Device) FadeIn(duration time.Duration, brightness uint8) {
+	for i := 0; i < int(brightness); i++ {
 		d.Brightness(uint8(i))
-		time.Sleep(duration / 8) // because there are 8 steps of brightness
+		time.Sleep(duration / time.Duration(int(brightness))) // because there are 8 steps of brightness
 	}
 }
 
