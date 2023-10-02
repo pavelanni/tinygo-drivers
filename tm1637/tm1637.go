@@ -50,6 +50,10 @@ func (d *Device) ClearDisplay() {
 	d.writeData([]byte{0, 0, 0, 0}, 0)
 }
 
+func (d *Device) DisplayPoint() {
+	d.writeData([]byte{127, 127, 127, 127}, 0)
+}
+
 // DisplayText shows a text on the display.
 //
 // Only the first 4 letters in the array text would be shown.
