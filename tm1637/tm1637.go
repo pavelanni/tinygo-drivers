@@ -51,7 +51,7 @@ func (d *Device) ClearDisplay() {
 }
 
 func (d *Device) DisplayPoint() {
-	d.writeData([]byte{128, 128, 128, 128}, 0)
+
 }
 
 // DisplayText shows a text on the display.
