@@ -30,6 +30,9 @@ func main() {
 		time.Sleep(time.Millisecond * 200)
 	}
 
+	tm.DisplayPoint()
+	time.Sleep(time.Second * 2)
+
 	i := int16(0)
 	tStart := time.Now()
 	for {
