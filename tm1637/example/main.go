@@ -37,7 +37,7 @@ func main() {
 	tStart := time.Now()
 	for {
 		tm.DisplayNumber(i)
-		i++
+		//i++
 		time.Sleep(time.Millisecond * 80)
 		if i > 88 {
 			break
