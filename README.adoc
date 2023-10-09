@@ -2,6 +2,7 @@
 
 This repository contains TinyGo drivers either written by me,
 or the drivers from the original repo slightly modified for specific devices (e.g. `tm1637`).
+Not to be confused with the _real_ TinyGo drivers https://github.com/tinygo-org/drivers.
 
 == TM1637
 
