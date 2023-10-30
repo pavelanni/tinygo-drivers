@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"machine"
 	"strconv"
+	"time"
 )
 
 type Device struct {
@@ -44,6 +45,7 @@ func (d *Device) Read() ([]byte, error) {
 	data := make([]byte, 0)
 
 	for {
+		time.Sleep(50 * time.Millisecond)
 		if d.uart.Buffered() > 0 {
 			inByte, err := d.uart.ReadByte()
 			if err != nil {
@@ -58,6 +60,16 @@ func (d *Device) Read() ([]byte, error) {
 	print("received message: ")
 	printBytes(data)
 	return data, nil
+}
+
+func (d *Device) ReadByte() (byte, error) {
+	inByte, err := d.uart.ReadByte()
+	if err != nil {
+		return 0, err
+	}
+	println("UART byte: ", inByte)
+	return inByte, nil
+
 }
 
 func (d *Device) QueryStatus() {

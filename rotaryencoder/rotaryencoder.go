@@ -3,10 +3,13 @@ package rotaryencoder
 
 import (
 	"machine"
+	"time"
 )
 
 var (
-	states = []int8{0, -1, 1, 0, 1, 0, 0, -1, -1, 0, 0, 1, 0, 1, -1, 0}
+	states           = []int8{0, -1, 1, 0, 1, 0, 0, -1, -1, 0, 0, 1, 0, 1, -1, 0}
+	lastClick        time.Time
+	debounceInterval time.Duration = 200 * time.Millisecond
 )
 
 // New creates a new rotary encoder.
@@ -47,11 +50,14 @@ func (enc *Device) Configure() {
 
 func (enc *Device) swInterrupt(pin machine.Pin) {
 	if enc.pinS.Get() { // the switch is released -- because of pullup
-		enc.swValue = false
-		enc.wasClicked = true
-		select {
-		case enc.Switch <- true:
-		default:
+		if time.Since(lastClick) > debounceInterval {
+			lastClick = time.Now()
+			enc.swValue = false
+			enc.wasClicked = true
+			select {
+			case enc.Switch <- true:
+			default:
+			}
 		}
 	} else { //the switch is pressed
 		enc.swValue = true
